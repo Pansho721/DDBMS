@@ -1,0 +1,40 @@
+services:
+  coordinator: 
+    containers_name: coordinator
+    image: citusdata/citus:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - citus-network
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  worker_1:
+    container_name: worker_1
+    image: citusdata/citus:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - citus-network
+  worker_2:
+    container_name: worker_2
+    image: citusdata/citus:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    networks:
+      - citus-network
+networks:
+  citus-network:
+    driver: bridge
